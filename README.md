@@ -93,3 +93,6 @@ Click on the "Submit Project" button in the classroom and follow the instruction
 ## Dataset Info
 
 The landmark images are a subset of the Google Landmarks Dataset v2.
+
+### Here is my own badge using Viola
+[![Binder]( https://mybinder.org/badge_logo.svg )](https://mybinder.org/v2/gh/AtharEzz/my-landmark-app/580bf04c9dd06a9d6288d8c6fefeb45e8d1417fa?urlpath=voila/render/app/app.ipynb)
