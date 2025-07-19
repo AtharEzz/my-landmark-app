@@ -17,19 +17,6 @@ If no location metadata for an image is available, one way to infer the location
 In this project, you will take the first steps towards addressing this problem by building a CNN-powered app to automatically predict the location of the image based on any landmarks depicted in the image. At the end of this project, your app will accept any user-supplied image as input and suggest the top k most relevant landmarks from 50 possible landmarks from across the world.
 
 
-## Project Instructions
-
-### Getting started
-
-You have two choices for completing this project. You can work locally on your machine (NVIDIA GPU highly recommended), or you can work in the provided Udacity workspace that you can find in your classroom.
-
-#### Setting up in the Udacity Project Workspace
-You can find the Udacity Project Workspace in your Udacity classroom, in the Project section.
-
-1. Start the workspace by clicking on `Project Workspace` in the left menu in the page
-2. When prompted on whether you want a GPU or not, please ANSWER YES (the GPU is going to make everything several times faster)
-
-The environment is already setup for you, including the starter code, so you can jump right into building the project!
 
 #### Setting up locally
 
@@ -64,35 +51,14 @@ This setup requires a bit of familiarity with creating a working deep learning e
 		jupyter lab
 	```
 
-### Developing your project
 
-Now that you have a working environment, execute the following steps:
 
->**Note:** Complete the following notebooks in order, do not move to the next step if you didn't complete the previous one.
 
-1. Open the `cnn_from_scratch.ipynb` notebook and follow the instructions there
-2. Open `transfer_learning.ipynb` and follow the instructions
-3. Open `app.ipynb` and follow the instructions there
 
-## Evaluation
-
-Your project will be reviewed by a Udacity reviewer against the CNN project rubric.  Review this rubric thoroughly and self-evaluate your project before submission.  All criteria found in the rubric must meet specifications for you to pass.
-
-## Project Submission
-
-Your submission should consist of the github link to your repository.  Your repository should contain:
-- The `landmark.ipynb` file with fully functional code, all code cells executed and displaying output, and all questions answered.
-- An HTML or PDF export of the project notebook with the name `report.html` or `report.pdf`.
-
-Please do __NOT__ include any of the project data sets provided in the `landmark_images/` folder.
-
-### Ready to submit your project?
-
-Click on the "Submit Project" button in the classroom and follow the instructions to submit!
 
 ## Dataset Info
 
 The landmark images are a subset of the Google Landmarks Dataset v2.
 
-### Here is my own badge using Viola
+# Here is my own badge using Viola - Standalone App
 [![Binder]( https://mybinder.org/badge_logo.svg )](https://mybinder.org/v2/gh/AtharEzz/my-landmark-app/580bf04c9dd06a9d6288d8c6fefeb45e8d1417fa?urlpath=voila/render/app/app.ipynb)
