@@ -1,0 +1,4 @@
+#!/bin/bash
+# This ensures ipywidgets frontend is enabled for JupyterLab
+jupyter labextension install @jupyter-widgets/jupyterlab-manager || true
+# The '|| true' allows the build to continue even if install fails (e.g., if already installed)
