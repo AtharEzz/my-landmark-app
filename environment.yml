@@ -13,7 +13,7 @@ dependencies:
   - cudatoolkit=11.3   # Corresponding CUDA version for PyTorch 1.11.0
 
   # Conda-installed packages (from your list, or dependencies of jupyterlab/voila)
-  - opencv-python-headless=4.5.3.56 # Installing via conda-forge for robustness
+  - opencv-python-headless=# Installing via conda-forge for robustness
   - nodejs # Required by jupyterlab for frontend extensions
   - voila
   - jupyterlab # As specified in your pip install list, better to conda install
