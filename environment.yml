@@ -1,0 +1,37 @@
+name: udacity_app
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.7.6
+  # Exact PyTorch, torchvision, torchaudio, and cudatoolkit versions from your original project
+  - pytorch=1.11.0
+  - torchvision=0.12.0 # This version is known to be compatible with PyTorch 1.11.0
+  - torchaudio=0.11.0  # This version is known to be compatible with PyTorch 1.11.0
+  - cudatoolkit=11.3   # Corresponding CUDA version for PyTorch 1.11.0
+
+  # Conda-installed packages (from your list, or dependencies of jupyterlab/voila)
+  - opencv-python-headless=4.5.3.56 # Installing via conda-forge for robustness
+  - nodejs # Required by jupyterlab for frontend extensions
+  - voila
+  - jupyterlab # As specified in your pip install list, better to conda install
+  - notebook   # Often pulled by jupyterlab, or needed for jupyter commands
+  - ipykernel  # Essential for the kernel
+
+  - pip
+  - pip:
+    # Your specific pip requirements from your list
+    - matplotlib==3.4.3
+    - numpy==1.21.2
+    - pillow==7.0.0 # This version should now be compatible with Python 3.7.6
+    - bokeh==2.1.1
+    - tqdm==4.63.0
+    - ipywidgets==7.6.5 # Crucial: Using the exact original version
+    - livelossplot==0.5.4
+    - pytest==7.1.1
+    - pandas==1.3.5
+    - seaborn==0.11.2
+    # widgetsnbextension is typically a dependency of ipywidgets, but explicitly adding for clarity
+    - widgetsnbextension==3.5.2 # Crucial: Matching ipywidgets 7.6.5
