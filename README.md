@@ -1,64 +1,110 @@
-## Project Overview
+# Landmark Classifier - CNN from Scratch vs Transfer Learning
 
-Welcome to the Convolutional Neural Networks (CNN) project!
-In this project, you will learn how to build a pipeline to process real-world, user-supplied images and to put your model into an app.
-Given an image, your app will predict the most likely locations where the image was taken.
+## The Problem
 
-By completing this lab, you demonstrate your understanding of the challenges involved in piecing together a series of models designed to perform various tasks in a data processing pipeline. 
+Photo sharing and storage services benefit enormously from location data attached to uploaded images. While many photos carry GPS metadata, a significant portion do not - either because the camera lacked GPS capability or because metadata was scrubbed for privacy reasons.
 
-Each model has its strengths and weaknesses, and engineering a real-world application often involves solving many problems without a perfect answer.
+One way to infer location from a photo is to detect and classify a recognizable landmark in the image. But with hundreds of thousands of landmarks worldwide and millions of photos uploaded daily, human review is completely unscalable.
 
-### Why We're Here
+This project builds an automated solution: a CNN-powered app that predicts the most likely landmark depicted in any user-supplied image, enabling photo services to automatically suggest location tags and organize photos - without requiring GPS metadata.
 
-Photo sharing and photo storage services like to have location data for each photo that is uploaded. With the location data, these services can build advanced features, such as automatic suggestion of relevant tags or automatic photo organization, which help provide a compelling user experience. Although a photo's location can often be obtained by looking at the photo's metadata, many photos uploaded to these services will not have location metadata available. This can happen when, for example, the camera capturing the picture does not have GPS or if a photo's metadata is scrubbed due to privacy concerns.
+## Solution
 
-If no location metadata for an image is available, one way to infer the location is to detect and classify a discernable landmark in the image. Given the large number of landmarks across the world and the immense volume of images that are uploaded to photo sharing services, using human judgement to classify these landmarks would not be feasible.
+End-to-end CNN pipeline covering data preprocessing, model design, training, comparison, and deployment - completed as part of the **AI Programming with Python Nanodegree (Udacity)**.
 
-In this project, you will take the first steps towards addressing this problem by building a CNN-powered app to automatically predict the location of the image based on any landmarks depicted in the image. At the end of this project, your app will accept any user-supplied image as input and suggest the top k most relevant landmarks from 50 possible landmarks from across the world.
+**Live App:** [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/AtharEzz/my-landmark-app/580bf04c9dd06a9d6288d8c6fefeb45e8d1417fa?urlpath=voila/render/app/app.ipynb)
+
+---
+
+## Results
+
+| Model | Test Accuracy | Test Loss |
+|---|---|---|
+| Custom CNN (from scratch) | 51% (644/1250) | 1.90 |
+| ResNet50 Transfer Learning | **78% (978/1250)** | **0.87** |
+
+**Transfer learning significantly outperformed the custom CNN** - a result that makes intuitive sense: ResNet50's ImageNet-pretrained features encode rich visual representations (edges, textures, shapes) that transfer well to landmark recognition. The custom CNN, trained from scratch on a relatively small dataset, could not develop the same feature depth in the same number of epochs.
+
+The ResNet50 model was exported via **TorchScript** and deployed as the production model in the live app.
+
+---
+
+## Dataset
+
+- **Source:** Subset of Google Landmarks Dataset v2
+- **Classes:** 50 landmark categories from across the world
+- **Training set:** ~6,250 images
+- **Test set:** 1,250 images
+- **Input size:** 224×224 RGB (ResizeCrop for training, CenterCrop for validation/test)
+
+---
+
+## Approach
+
+### Part 1: Custom CNN from Scratch (`cnn_from_scratch.ipynb`)
+
+**Architecture:**
+- 4 convolutional blocks, each with 2 Conv layers + BatchNorm + ReLU + MaxPooling
+- BatchNormalization after each Conv layer to stabilize training
+- Dropout (0.4) before the classifier to reduce overfitting
+- Fully connected classifier head for 50 output classes
+
+**Training setup:**
+- Optimizer: Adam (lr=0.0001)
+- Epochs: 50
+- Data augmentation on training set (random horizontal flip, random crop)
+- No augmentation on validation/test (center crop only)
+
+**Result:** 51% test accuracy - respectable for a 50-class problem trained from scratch on limited data, but clearly limited by the absence of pretrained features.
+
+### Part 2: Transfer Learning (`transfer_learning.ipynb`)
+
+**Architecture:**
+- Base: ResNet50 pretrained on ImageNet (backbone frozen - `requires_grad = False`)
+- Head: replaced final classification layer with a new fully connected layer for 50 classes
+- Only the new head was trained; backbone weights were not updated
+
+**Training setup:**
+- Optimizer: Adam (lr=0.0001, weight_decay=0.0005)
+- Epochs: 50
+- Same data loading pipeline as Part 1
+
+**Result:** 78% test accuracy - a 27 percentage point improvement over the custom CNN, confirming that frozen pretrained features from ImageNet transfer effectively to landmark classification.
+
+### Part 3: App Deployment (`app.ipynb`)
+
+- Best model (ResNet50) exported via **TorchScript** for portable, framework-independent deployment
+- Confusion matrix generated across all 1,250 test predictions to visualize per-class performance
+- Deployed as an interactive **Voilà app** accessible via Binder - users can upload any image and receive the top predicted landmarks with confidence scores
+
+---
+
+## Project Structure
+
+```
+├── cnn_from_scratch.ipynb     # Custom CNN design, training, and export
+├── transfer_learning.ipynb    # ResNet50 transfer learning and export
+├── app/
+│   └── app.ipynb              # Voilà app for user-facing inference
+├── src/
+│   ├── data.py                # Data loading and augmentation
+│   ├── model.py               # Custom CNN architecture
+│   ├── transfer.py            # Transfer learning model setup
+│   ├── train.py               # Training, validation, and test loops
+│   ├── optimization.py        # Loss and optimizer setup
+│   └── predictor.py           # TorchScript export and inference
+├── checkpoints/
+│   ├── best_val_loss.pt       # Best custom CNN weights
+│   └── transfer_exported.pt   # Exported ResNet50 TorchScript model
+└── requirements.txt
+```
+
+---
+
+## Tools & Libraries
+
+Python, PyTorch, torchvision (ResNet50), TorchScript, Voilà, Binder, NumPy, Matplotlib
+
+---
 
 
-
-#### Setting up locally
-
-This setup requires a bit of familiarity with creating a working deep learning environment. While things should work out of the box, in case of problems you might have to do operations on your system (like installing new NVIDIA drivers) that are not covered in the class. Please do this if you are at least a bit familiar with these subjects, otherwise please consider using the provided Udacity workspace that you find in the classroom.
-
-1. Open a terminal and clone the repository, then navigate to the downloaded folder:
-	
-	```	
-		git clone https://github.com/udacity/cd1821-CNN-project-starter.git
-		cd cd1821-CNN-project-starter
-	```
-    
-2. Create a new conda environment with python 3.7.6:
-
-    ```
-        conda create --name udacity_cnn_project -y python=3.7.6
-        conda activate udacity_cnn_project
-    ```
-    
-    NOTE: you will have to execute `conda activate udacity_cnn_project` for every new terminal session.
-    
-3. Install the requirements of the project:
-
-    ```
-        pip install -r requirements.txt
-    ```
-
-4. Install and open Jupyter lab:
-	
-	```
-        pip install jupyterlab
-		jupyter lab
-	```
-
-
-
-
-
-
-## Dataset Info
-
-The landmark images are a subset of the Google Landmarks Dataset v2.
-
-# Here is my own badge using Viola - Standalone App
-[![Binder]( https://mybinder.org/badge_logo.svg )](https://mybinder.org/v2/gh/AtharEzz/my-landmark-app/580bf04c9dd06a9d6288d8c6fefeb45e8d1417fa?urlpath=voila/render/app/app.ipynb)
